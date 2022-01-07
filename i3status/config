@@ -1,0 +1,42 @@
+general {
+	colors = true
+	color_good = "#b8bb26"
+	color_degraded = "#fabd2f"
+	color_bad = "#fb4934"
+	interval = 3
+	output_format = "i3bar" 
+}
+
+order += "volume master"
+order += "cpu_usage"
+order += "cpu_temperature 0"
+order += "memory"
+order += "tztime local"
+
+
+volume master {
+	format = "VOL: %volume"
+	format_muted = "muted (%volume)"
+	device = "default"
+	mixer = "Master"
+	mixer_idx = 0
+}
+
+cpu_usage {
+	format = "CPU: %usage"
+}
+
+cpu_temperature 0 {
+	format = "CPU TEMP: %degrees °C"
+	path = "/sys/class/hwmon/hwmon1/temp2_input" 
+}
+
+memory {
+	format = "RAM: %used"
+	threshold_degraded = "1G"
+	format_degraded = "M: < %available"
+}
+
+tztime local {
+	format = "%R"
+}
