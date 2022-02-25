@@ -4,20 +4,20 @@ set {
 	$mod Mod4
 
 	# Home row direction keys, like vi
-	$left h
-	$down j
-	$up k
-	$right l
+	$left	h
+	$down	j
+	$up	k
+	$right	l
 
 	# Terminal emulator
 	$term footclient
 
 	# Application launcher
-	$menu bemenu-run -p exec --no-exec | xargs swaymsg exec --
+	$launcher bemenu-run -p exec --no-exec | xargs swaymsg exec --
 
 	# Font
-	$font Iosevka
-	$font_size 10
+	$font Terminus
+	$font_size 9
 }
 
 ### General configuration
@@ -26,13 +26,13 @@ set {
 #xwayland disable
 
 # Gaps settings
-smart_gaps on
+smart_gaps off
 gaps inner 10
 gaps outer 0
 
 # Border settings
 # normal = w/ titlebar, pixel = w/o titlebar, none = disable
-smart_borders on
+smart_borders off
 default_border pixel 2
 default_floating_border pixel 2
 
@@ -46,12 +46,12 @@ titlebar_padding 10 1
 ### Output configuration
 
 # Wallpaper
-output * bg ~/wallpapers/39.png fill
+output * bg ~/wallpapers/48.jpg fill
 
 # Monitor configuration
 # See swaymsg -t get_outputs
-output HDMI-A-1 pos 0 0
-output DP-2 pos 1920 0
+output HDMI-A-1 pos 0 0 mode 1920x1080@72Hz adaptive_sync on
+output DP-2 pos 1920 0 mode 1280x1024@75Hz
 
 ### Idle configuration
 exec swayidle -w \
@@ -108,7 +108,7 @@ bindsym --to-code {
 	$mod+Shift+q kill
 
 	# Start your launcher
-	$mod+d exec $menu
+	$mod+d exec $launcher
 
 	# Reload the configuration file
 	$mod+Shift+c reload
@@ -272,15 +272,14 @@ client.urgent		$urgent	$urgent	$light	$light	$urgent
 seat seat0 xcursor_theme Adwaita 24
 
 # Set GTK theme
-exec_always {
-	gsettings set org.gnome.desktop.interface gtk-theme 'Materia-dark-compact'
-	gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
-	gsettings set org.gnome.desktop.interface gtk-color-scheme 'dark'
-	gsettings set org.gnome.desktop.interface font-name "$font $font_size"
-	gsettings set org.gnome.desktop.interface monospace-font-name \
-		"$font $font_size"
-	gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
-	gsettings set org.gnome.desktop.interface cursor-size '24'
+exec_always gsettings set org.gnome.desktop.interface {
+	gtk-theme		'Adwaita-dark'
+	icon-theme		'Adwaita'
+	gtk-color-scheme	'dark'
+	font-name		"$font $font_size"
+	monospace-font-name	"$font $font_size"
+	cursor-theme		'Adwaita'
+	cursor-size		'24'
 }
 
 ### Status bar
@@ -314,8 +313,8 @@ exec {
 		--address=unix:path=$XDG_RUNTIME_DIR/bus &
 
 	# Notification daemon
-	# pgrep -x mako || mako &
-
+	pgrep -x mako || mako &
+	
 	# Foot server, so we can use footclient as term
 	pgrep -xf 'foot --server' || \
 		foot --server --log-no-syslog --log-level=warning &
