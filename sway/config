@@ -287,7 +287,7 @@ exec_always gsettings set org.gnome.desktop.interface {
 
 bar {
 	font $font $font_size
-	separator_symbol ' | '
+	separator_symbol '  '
 	position top
 	status_command i3status
 	status_padding 0
