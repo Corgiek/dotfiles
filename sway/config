@@ -23,16 +23,16 @@ set {
 ### General configuration
 
 # Run pure wayland session (causes warning on config reload)
-#xwayland disable
+xwayland disable
 
 # Gaps settings
-smart_gaps off
+smart_gaps on
 gaps inner 10
 gaps outer 0
 
 # Border settings
 # normal = w/ titlebar, pixel = w/o titlebar, none = disable
-smart_borders off
+smart_borders on
 default_border pixel 2
 default_floating_border pixel 2
 
@@ -46,7 +46,7 @@ titlebar_padding 10 1
 ### Output configuration
 
 # Wallpaper
-output * bg ~/wallpapers/48.jpg fill
+output * bg ~/wallpapers/46.png fill
 
 # Monitor configuration
 # See swaymsg -t get_outputs
@@ -194,6 +194,9 @@ bindsym --to-code {
 	# Make the current focus fullscreen
 	$mod+f fullscreen
 
+	# Make the current focus fullscreen for all outputs
+	$mod+Shift+f fullscreen global
+
 	# Toggle the current focus between tiling and floating mode
 	$mod+Shift+space floating toggle
 
@@ -247,7 +250,7 @@ set {
 	# Alduin color scheme
 	$light #dfdfaf
 	$dark #1c1c1c
-	$focus #dfdfaf
+	$focus #af875f
 	$inact #87afaf
 	$unfoc $dark
 	$urgent #af5f5f
@@ -273,7 +276,7 @@ seat seat0 xcursor_theme Adwaita 24
 
 # Set GTK theme
 exec_always gsettings set org.gnome.desktop.interface {
-	gtk-theme		'Adwaita-dark'
+	gtk-theme		'Materia-dark-compact'
 	icon-theme		'Adwaita'
 	gtk-color-scheme	'dark'
 	font-name		"$font $font_size"
