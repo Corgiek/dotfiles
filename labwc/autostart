@@ -1,0 +1,18 @@
+# Wallpaper.
+swaybg -i ~/wallpapers/forest.jpg >/dev/null 2>&1 &
+
+# Terminal server-client mode.
+foot --server >/dev/null 2>&1 &
+
+# Panel.
+waybar >/dev/null 2>&1 &
+
+# Notification.
+mako >/dev/null 2>&1 &
+
+# Screenlock.
+swayidle -w \
+  timeout 600 'wlopm --off \*' \
+	resume 'wlopm --on \*' \
+	timeout 620 swaylock \
+	before-sleep swaylock >/dev/null 2>&1 &

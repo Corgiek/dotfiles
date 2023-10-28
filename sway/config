@@ -1,0 +1,344 @@
+### Variables
+set {
+	# Logo key. Use Mod1 for Alt.
+	$mod Mod4
+
+	# Home row direction keys, like vi
+	$left	h
+	$down	j
+	$up	k
+	$right	l
+
+	# Terminal emulator
+	#$term footclient
+  $term ps -C alacritty >/dev/null && alacritty msg create-window || alacritty -e tmux a
+
+	# Application launcher
+	$launcher rofi -show drun -terminal '$term' -theme $HOME/.config/rofi/theme.rasi
+
+	# Font
+	$font Iosevka
+	$font_size 11
+}
+
+### General configuration
+
+# Run pure wayland session (causes warning on config reload)
+#xwayland disable
+
+# Gaps settings
+smart_gaps on
+gaps inner 10
+gaps outer 0
+
+# Border settings
+# normal = w/ titlebar, pixel = w/o titlebar, none = disable
+smart_borders on
+default_border pixel 2
+default_floating_border pixel 2
+
+# Titlebar font
+font $font Bold $font_size
+
+# Titlebar settings
+titlebar_border_thickness 0
+titlebar_padding 10 1
+
+### Output configuration
+
+# Monitor
+output eDP-1 mode 2560x1444 scale 1.25
+
+# Wallpaper
+#exec swww img ~/images/stars.gif
+output * bg ~/wallpapers/blue_flower.png fill
+
+### Idle configuration
+exec swayidle -w \
+	timeout 600 'swaymsg "output * dpms off"' \
+		resume 'swaymsg "output * dpms on"' \
+	timeout 620 swaylock \
+	before-sleep swaylock
+
+### Input configuration
+# See `man 5 sway-input`
+
+# Mouse
+input type:pointer {
+	accel_profile flat
+}
+
+# Drawing tablet
+input type:tablet_tool {
+	left_handed 1
+}
+
+# Keyboard
+input type:keyboard {
+	xkb_layout us,ru
+	xkb_options grp:caps_toggle,grp_led:caps
+}
+
+# Touchpad
+input type:touchpad {
+	accel_profile flat
+	tap enabled
+	dwt enabled
+	tap_button_map lrm
+	natural_scroll enabled
+}
+
+### Key bindings
+
+## Basics
+
+# Make a screenshot and copy to clipboard
+bindsym --to-code Print exec \
+	grim - | wl-copy -t image/png
+bindsym --to-code $mod+Print exec slurp -b "$dark$alpha" -c "$light" -B "$focus$alpha" | \
+	grim -g- - | wl-copy -t image/png 
+
+# General actions
+bindsym --to-code {
+	# Start a terminal
+	$mod+Return exec $term
+
+  # Start a terminal with tmux
+  $mod+Shift+Return exec $term zsh
+
+	# Kill focused window
+	$mod+Shift+q kill
+
+	# Start your launcher
+	$mod+d exec $launcher
+
+	# Reload the configuration file
+	$mod+Shift+c reload
+
+	# Exit sway
+	$mod+Shift+e exec swaynag -t warning \
+	-m 'Exit sway?' -b 'Yes' 'swaymsg exit'
+}
+
+# Media keys
+bindsym --locked {
+	# Audio	
+	XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
+	XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -10%
+	XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+  XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+	# Brightness
+	XF86MonBrightnessDown exec light -U 10
+	XF86MonBrightnessUp exec light -A 10
+}
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
+
+# Movement
+bindsym --to-code {
+	# Move your focus around
+	$mod+$left focus left
+	$mod+$down focus down
+	$mod+$up focus up
+	$mod+$right focus right
+	# Or use $mod+[up|down|left|right]
+	$mod+Left focus left
+	$mod+Down focus down
+	$mod+Up focus up
+	$mod+Right focus right
+
+	# Move the focused window with the same, but add Shift
+	$mod+Shift+$left move left
+	$mod+Shift+$down move down
+	$mod+Shift+$up move up
+	$mod+Shift+$right move right
+	# Ditto, with arrow keys
+	$mod+Shift+Left move left
+	$mod+Shift+Down move down
+	$mod+Shift+Up move up
+	$mod+Shift+Right move right
+}
+
+# Workspaces
+bindsym {
+	# Switch to workspace
+	$mod+1 workspace 1
+	$mod+2 workspace 2
+	$mod+3 workspace 3
+	$mod+4 workspace 4
+	$mod+5 workspace 5
+	$mod+6 workspace 6
+	$mod+7 workspace 7
+	$mod+8 workspace 8
+	$mod+9 workspace 9
+	$mod+0 workspace 10
+	# Move focused container to workspace
+	$mod+Shift+1 move container to workspace 1
+	$mod+Shift+2 move container to workspace 2
+	$mod+Shift+3 move container to workspace 3
+	$mod+Shift+4 move container to workspace 4
+	$mod+Shift+5 move container to workspace 5
+	$mod+Shift+6 move container to workspace 6
+	$mod+Shift+7 move container to workspace 7
+	$mod+Shift+8 move container to workspace 8
+	$mod+Shift+9 move container to workspace 9
+	$mod+Shift+0 move container to workspace 10
+	# Note: workspaces can have any name you want, not just numbers.
+	# We just use 1-10 as the default.
+}
+
+# Layout stuff
+bindsym --to-code {
+	# You can "split" the current object of your focus with
+	# $mod+b or $mod+v, for horizontal and vertical splits
+	# respectively.
+	$mod+b splith
+	$mod+v splitv
+
+	# Switch the current container between different layout styles
+	$mod+s layout stacking
+	$mod+w layout tabbed
+	$mod+e layout toggle split
+
+	# Make the current focus fullscreen
+	$mod+f fullscreen
+
+	# Make the current focus fullscreen for all outputs
+	$mod+Shift+f fullscreen global
+
+	# Toggle the current focus between tiling and floating mode
+	$mod+Shift+space floating toggle
+
+	# Swap focus between the tiling area and the floating area
+	$mod+space focus mode_toggle
+
+	# Move focus to the parent container
+	$mod+a focus parent
+}
+
+## Scratchpad
+# Sway has a "scratchpad", which is a bag of holding for windows.
+# You can send windows there and get them back later.
+
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
+
+# Resizing containers
+mode "resize" {
+	bindsym --to-code {
+		# left will shrink the containers width
+		# right will grow the containers width
+		# up will shrink the containers height
+		# down will grow the containers height
+		$left resize shrink width 10px
+		$down resize grow height 10px
+		$up resize shrink height 10px
+		$right resize grow width 10px
+
+		# Ditto, with arrow keys
+		Left resize shrink width 10px
+		Down resize grow height 10px
+		Up resize shrink height 10px
+		Right resize grow width 10px
+
+		# Return to default mode
+		Return mode "default"
+		Escape mode "default"
+	}
+}
+bindsym --to-code $mod+r mode "resize"
+
+### Apperance
+
+# Colors
+set {
+	# Alduin color scheme
+	#$light #dfdfaf
+	#$dark #1c1c1c
+	#$focus #af875f
+	#$inact #87afaf
+	#$unfoc $dark
+	#$urgent #af5f5f
+	#$alpha e0
+
+ # Paledark color scheme
+ $light #C8C3C7
+ $dark #171518
+ $focus #AF575B
+ $inact #6D8F8A
+ $unfoc #7D8A6B
+ $urgent #CCAE7A
+ $alpha e0
+}
+
+# Border colors (see `man 5 sway`)
+# border	- border around titlebar
+# background	- titlebar background
+# text		- text on titlebar
+# indicator	- shown where new window will be open
+# child_border	- border around the window
+# class			border	bg	text	indic	child_border
+client.focused		$focus	$focus	$light	$light	$focus
+client.focused_inactive $inact	$inact	$light	$light	$inact
+client.unfocused	$unfoc	$unfoc	$light	$light	$unfoc
+client.urgent		$urgent	$urgent	$light	$light	$urgent
+
+## UI stuff
+
+# Set cursor theme
+seat seat0 xcursor_theme Adwaita 24
+
+# Set GTK theme
+exec_always gsettings set org.gnome.desktop.interface {
+	gtk-theme		'Materia-dark-compact'
+	icon-theme		'Adwaita'
+	gtk-color-scheme	'dark'
+	font-name		"$font $font_size"
+	monospace-font-name	"$font $font_size"
+	cursor-theme		'Adwaita'
+	cursor-size		'24'
+}
+
+### Status bar
+# See `man 5 sway-bar`
+
+bar {
+  swaybar_command waybar
+  position top
+  mode dock
+}
+
+### Service
+
+# Autostart
+exec {
+	# D-Bus session
+	pgrep -x dbus-daemon || dbus-daemon --session \
+		--address=unix:path=$XDG_RUNTIME_DIR/bus &
+
+	# Notification daemon
+	pgrep -x mako || mako &
+	
+	# Foot server, so we can use footclient as term
+	#pgrep -xf 'foot --server' || \
+	#	foot --server --log-no-syslog --log-level=warning &
+
+  # Swww
+  #pgrep -x swww init || swww init
+}
+
+# Include additional configs
+# include {
+#	/etc/sway/config.d/*
+#	~/.config/sway/config.d/*
+#}
