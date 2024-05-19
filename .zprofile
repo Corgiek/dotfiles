@@ -7,9 +7,9 @@ export TCELL_TRUECOLOR=on
 export MESA_GLTHREAD=true
 export QT_QPA_PLATFORM=wayland-egl
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-#export SDL_VIDEODRIVER=wayland
-export OSONE_PLATFORM=wayland
-export WLR_RENDERER=vulkan
+export SDL_VIDEODRIVER=wayland
+export OZONE_PLATFORM=wayland
+#export WLR_RENDERER=vulkan
 export MOZ_ENABLE_WAYLAND=1
 export MOZ_DISABLE_RDD_SANDBOX=1
 export MOZ_WEBRENDER=1
@@ -28,7 +28,8 @@ export GOPATH="${XDG_DATA_HOME}/go"
 export XDG_CURRENT_DESKTOP=Hyprland
 export XDG_SESSION_TYPE=wayland
 export XDG_SESSION_TYPE=Hyprland
-export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORMTHEME=qt6ct
+export WINEPREFIX=/home/corg/.local/share/wine/
 export BEMENU_OPTS="-b -H20 -n --fn 'Ubuntu 10' --tb '#1c1c1c' --tf '#dfdfaf' --hb '#af5f5f' --hf '#1c1c1c' --nb '#1c1c1c' --fbb '#1c1c1c' "
 
 if [ -z "$XDG_RUNTIME_DIR" ]; then
